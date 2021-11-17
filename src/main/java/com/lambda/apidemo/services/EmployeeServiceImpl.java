@@ -98,6 +98,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeerepos.save(currentEmployee);
     }
 
+    @Transactional
     @Override
     public void delete(long id) {
         if (employeerepos.findById(id).isPresent()) {
