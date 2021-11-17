@@ -10,6 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "employees")
+@JsonIgnoreProperties(value = "hasvalueforsalary")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,6 +19,8 @@ public class Employee {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Transient
+    public boolean hasvalueforsalary;
     private double salary;
 
     @ManyToMany()
@@ -54,6 +57,7 @@ public class Employee {
     }
 
     public void setSalary(double salary) {
+        hasvalueforsalary = true;
         this.salary = salary;
     }
 

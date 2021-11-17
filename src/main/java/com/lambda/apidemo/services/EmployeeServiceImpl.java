@@ -58,6 +58,46 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeerepos.save(newEmployee);
     }
 
+    @Transactional
+    @Override
+    public Employee update(Employee employee, long id) {
+        Employee currentEmployee = employeerepos.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee " + id + " not found!"));
+
+        if (employee.getName() != null) {
+           currentEmployee.setName(employee.getName());
+        }
+
+        if (employee.hasvalueforsalary) {
+            currentEmployee.setSalary(employee.getSalary());
+        }
+
+        if (employee.getJobtitles().size() > 0) {
+            currentEmployee.getJobtitles().clear();
+
+            for (JobTitle jt : employee.getJobtitles()) {
+                JobTitle newjt = jtrepos.findById(jt.getJobtitleid())
+                        .orElseThrow(() -> new EntityNotFoundException("Job Title " + " not found!"));
+
+                currentEmployee.getJobtitles().add(newjt);
+            }
+        }
+
+        if (employee.getEmails().size() > 0) {
+            currentEmployee.getEmails().clear();
+
+            for (Email e : employee.getEmails()) {
+                Email newEmail = new Email();
+                newEmail.setEmployee(currentEmployee);
+                newEmail.setEmail(e.getEmail());
+
+                currentEmployee.getEmails().add(newEmail);
+            }
+        }
+
+        return employeerepos.save(currentEmployee);
+    }
+
     @Override
     public List<Employee> findAllEmployees() {
         List<Employee> list = new ArrayList<>();

@@ -72,4 +72,11 @@ public class EmployeeController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PatchMapping(value = "/employee/{employeeid}", consumes = "application/json")
+    public ResponseEntity<?> updateEmployee(@Valid @RequestBody Employee updateEmployee, @PathVariable long employeeid) {
+        employeeService.update(updateEmployee, employeeid);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
