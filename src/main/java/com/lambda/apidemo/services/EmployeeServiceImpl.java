@@ -50,12 +50,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         for (Email e : employee.getEmails()) {
             Email newEmail = new Email();
             newEmail.setEmail(e.getEmail());
-            newEmail.setEmployee(employee);
+            newEmail.setEmployee(newEmployee);
 
             newEmployee.getEmails().add(newEmail);
         }
 
-        return employeerepos.save(employee);
+        return employeerepos.save(newEmployee);
     }
 
     @Override
