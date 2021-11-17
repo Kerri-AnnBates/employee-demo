@@ -8,6 +8,7 @@ import java.util.List;
 public interface EmployeeService {
     Employee save(Employee employee);
     Employee update(Employee employee, long id);
+    void delete(long id);
     List<Employee> findAllEmployees();
     List<Employee> findEmployeeNameContaining(String subname);
     List<Employee> findEmployeeEmailContaining(String subemail);

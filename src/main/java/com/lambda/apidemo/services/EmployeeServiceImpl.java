@@ -99,6 +99,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public void delete(long id) {
+        if (employeerepos.findById(id).isPresent()) {
+            employeerepos.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("Employee " + id + " not found!");
+        }
+    }
+
+    @Override
     public List<Employee> findAllEmployees() {
         List<Employee> list = new ArrayList<>();
         employeerepos.findAll().iterator().forEachRemaining(list::add);
@@ -120,4 +129,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<EmpNameCountJobs> getEmpNameCountJobs() {
         return employeerepos.getCountEmpJobs();
     }
+
+
 }
