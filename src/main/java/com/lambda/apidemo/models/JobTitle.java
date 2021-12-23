@@ -20,7 +20,7 @@ public class JobTitle {
 //    private Set<Employee> employees = new HashSet<>();
 
     @OneToMany(mappedBy = "jobname", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = "jobnames", allowSetters = true)
+    @JsonIgnoreProperties(value = "jobname", allowSetters = true)
     private Set<EmployeeTitles> empnames = new HashSet<>();
 
     public JobTitle() {}

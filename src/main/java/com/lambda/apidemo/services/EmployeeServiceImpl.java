@@ -2,6 +2,7 @@ package com.lambda.apidemo.services;
 
 import com.lambda.apidemo.models.Email;
 import com.lambda.apidemo.models.Employee;
+import com.lambda.apidemo.models.EmployeeTitles;
 import com.lambda.apidemo.models.JobTitle;
 import com.lambda.apidemo.repositories.EmployeeRepository;
 import com.lambda.apidemo.repositories.JobTitleRepository;
@@ -38,12 +39,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         newEmployee.setName(employee.getName());
         newEmployee.setSalary(employee.getSalary());
 
-        newEmployee.getJobtitles().clear();
-        for (JobTitle jt : employee.getJobtitles()) {
-            JobTitle newJT = jtrepos.findById(jt.getJobtitleid())
-                    .orElseThrow(() -> new EntityNotFoundException("JobTitle " + jt.getJobtitleid() + " not found!"));
+        newEmployee.getJobnames().clear();
+        for (EmployeeTitles jt : employee.getJobnames()) {
+            JobTitle newJT = jtrepos.findById(jt.getJobname().getJobtitleid())
+                    .orElseThrow(() -> new EntityNotFoundException("JobTitle " + jt.getJobname().getTitle() + " not found!"));
 
-            newEmployee.getJobtitles().add(newJT);
+            newEmployee.getJobnames().add(new EmployeeTitles(newEmployee, newJT, "Stumps"));
         }
 
         newEmployee.getEmails().clear();
@@ -72,14 +73,14 @@ public class EmployeeServiceImpl implements EmployeeService {
             currentEmployee.setSalary(employee.getSalary());
         }
 
-        if (employee.getJobtitles().size() > 0) {
-            currentEmployee.getJobtitles().clear();
+        if (employee.getJobnames().size() > 0) {
+            currentEmployee.getJobnames().clear();
 
-            for (JobTitle jt : employee.getJobtitles()) {
-                JobTitle newjt = jtrepos.findById(jt.getJobtitleid())
-                        .orElseThrow(() -> new EntityNotFoundException("Job Title " + " not found!"));
+            for (EmployeeTitles jt : employee.getJobnames()) {
+                JobTitle newjt = jtrepos.findById(jt.getJobname().getJobtitleid())
+                        .orElseThrow(() -> new EntityNotFoundException("Job Title " + jt.getJobname().getJobtitleid() + " not found!"));
 
-                currentEmployee.getJobtitles().add(newjt);
+                currentEmployee.getJobnames().add(new EmployeeTitles(currentEmployee, newjt, "Stump"));
             }
         }
 

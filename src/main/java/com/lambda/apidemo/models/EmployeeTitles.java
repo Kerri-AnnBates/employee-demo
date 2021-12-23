@@ -12,13 +12,13 @@ import java.util.Objects;
 public class EmployeeTitles implements Serializable {
 
     @Id
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name = "employeeid")
     @JsonIgnoreProperties(value = "jobnames", allowSetters = true)
     private Employee emp;
 
     @Id
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name = "jobtitles")
     @JsonIgnoreProperties(value = "empnames", allowSetters = true)
     private JobTitle jobname;

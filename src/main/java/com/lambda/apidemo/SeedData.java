@@ -3,6 +3,7 @@ package com.lambda.apidemo;
 import com.github.javafaker.Faker;
 import com.lambda.apidemo.models.Email;
 import com.lambda.apidemo.models.Employee;
+import com.lambda.apidemo.models.EmployeeTitles;
 import com.lambda.apidemo.models.JobTitle;
 import com.lambda.apidemo.repositories.JobTitleRepository;
 import com.lambda.apidemo.services.EmployeeService;
@@ -18,8 +19,9 @@ import java.util.Set;
 
 @Transactional
 @Component
-public class SeedData implements CommandLineRunner {
-
+public class SeedData
+        implements CommandLineRunner
+{
     @Autowired
     private EmployeeService employeeService;
 
@@ -29,7 +31,9 @@ public class SeedData implements CommandLineRunner {
     private Random random = new Random();
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) throws
+            Exception
+    {
         JobTitle jt1 = new JobTitle();
         jt1.setTitle("Big Boss");
         jobTitlerepos.save(jt1);
@@ -47,8 +51,10 @@ public class SeedData implements CommandLineRunner {
         emp1.getEmails()
                 .add(new Email("bunny@hoppin.local",
                         emp1));
-        emp1.getJobtitles().add(jt1);
-        emp1.getJobtitles().add(jt2);
+        emp1.getJobnames()
+                .add(new EmployeeTitles(emp1, jt1, "Stumps"));
+        emp1.getJobnames()
+                .add(new EmployeeTitles(emp1, jt2, "Stumps"));
         employeeService.save(emp1);
 
         Employee emp2 = new Employee();
@@ -57,7 +63,8 @@ public class SeedData implements CommandLineRunner {
         emp2.getEmails()
                 .add(new Email("barnbarn@local.com",
                         emp2));
-        emp2.getJobtitles().add(jt1);
+        emp2.getJobnames()
+                .add(new EmployeeTitles(emp2, jt1, "Stumps"));
         employeeService.save(emp2);
 
         Employee emp3 = new Employee();
@@ -69,9 +76,10 @@ public class SeedData implements CommandLineRunner {
 
         // this section gets a unique list of names
         Set<String> empNamesSet = new HashSet<>();
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 3; i++)
         {
-            empNamesSet.add(nameFaker.name().fullName());
+            empNamesSet.add(nameFaker.name()
+                    .fullName());
         }
 
         for (String empName : empNamesSet)
@@ -84,12 +92,13 @@ public class SeedData implements CommandLineRunner {
             for (int j = 0; j < randomInt; j++)
             {
                 employee.getEmails()
-                        .add(new Email(nameFaker.internet().emailAddress(),
+                        .add(new Email(nameFaker.internet()
+                                .emailAddress(),
                                 employee));
             }
-            employee.getJobtitles().add(jt1); // just assigning them to the first job title
+            employee.getJobnames()
+                    .add(new EmployeeTitles(employee, jt1, "Stumps")); // just assigning them to the first job title
             employeeService.save(employee);
         }
-
     }
 }
