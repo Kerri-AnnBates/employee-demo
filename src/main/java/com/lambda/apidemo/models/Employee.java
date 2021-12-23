@@ -23,18 +23,27 @@ public class Employee {
     public boolean hasvalueforsalary;
     private double salary;
 
-    @ManyToMany()
-    @JoinTable(name = "employeetitles",
-            joinColumns = @JoinColumn(name = "employeeid"),
-            inverseJoinColumns = @JoinColumn(name = "jobtitleid"))
-    @JsonIgnoreProperties(value = "employees")
-    Set<JobTitle> jobtitles = new HashSet<>();
+//    @ManyToMany()
+//    @JoinTable(name = "employeetitles",
+//            joinColumns = @JoinColumn(name = "employeeid"),
+//            inverseJoinColumns = @JoinColumn(name = "jobtitleid"))
+//    @JsonIgnoreProperties(value = "employees")
+//    Set<JobTitle> jobtitles = new HashSet<>();
+
+    @OneToMany(mappedBy = "emp", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "emp", allowSetters = true)
+    private Set<EmployeeTitles> jobnames = new HashSet<>();
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties(value = "employee")
     private List<Email> emails = new ArrayList<>();
 
     public Employee() {}
+
+    public Employee(String name, double salary) {
+        this.name = name;
+        this.salary = salary;
+    }
 
     public long getEmployeeid() {
         return employeeid;
@@ -61,12 +70,12 @@ public class Employee {
         this.salary = salary;
     }
 
-    public Set<JobTitle> getJobtitles() {
-        return jobtitles;
+    public Set<EmployeeTitles> getJobnames() {
+        return jobnames;
     }
 
-    public void setJobtitles(Set<JobTitle> jobtitles) {
-        this.jobtitles = jobtitles;
+    public void setJobnames(Set<EmployeeTitles> jobnames) {
+        this.jobnames = jobnames;
     }
 
     public List<Email> getEmails() {
