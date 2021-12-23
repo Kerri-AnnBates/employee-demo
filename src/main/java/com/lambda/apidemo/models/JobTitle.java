@@ -15,9 +15,13 @@ public class JobTitle {
 
     private String title;
 
-    @ManyToMany(mappedBy = "jobtitles")
-    @JsonIgnoreProperties(value = "jobtitles")
-    private Set<Employee> employees = new HashSet<>();
+//    @ManyToMany(mappedBy = "jobtitles")
+//    @JsonIgnoreProperties(value = "jobtitles")
+//    private Set<Employee> employees = new HashSet<>();
+
+    @OneToMany(mappedBy = "jobname", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "jobnames", allowSetters = true)
+    private Set<EmployeeTitles> empnames = new HashSet<>();
 
     public JobTitle() {}
 
@@ -37,11 +41,11 @@ public class JobTitle {
         this.title = title;
     }
 
-    public Set<Employee> getEmployees() {
-        return employees;
+    public Set<EmployeeTitles> getEmpnames() {
+        return empnames;
     }
 
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
+    public void setEmpnames(Set<EmployeeTitles> empnames) {
+        this.empnames = empnames;
     }
 }
