@@ -3,15 +3,12 @@ package com.lambda.apidemo.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "employees")
 @JsonIgnoreProperties(value = "hasvalueforsalary")
-public class Employee {
+public class Employee extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long employeeid;
@@ -84,5 +81,10 @@ public class Employee {
 
     public void setEmails(List<Email> emails) {
         this.emails = emails;
+    }
+
+    // Get created date from auditable, to display in json
+    public Date getCreatedDate() {
+        return createdDate;
     }
 }

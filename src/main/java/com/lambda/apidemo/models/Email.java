@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "emails")
-public class Email {
+public class Email extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long emailid;

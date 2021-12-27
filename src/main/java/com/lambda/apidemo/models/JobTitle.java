@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "jobtitles")
-public class JobTitle {
+public class JobTitle extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long jobtitleid;

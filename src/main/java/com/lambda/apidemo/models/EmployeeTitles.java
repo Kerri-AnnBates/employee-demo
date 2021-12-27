@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "employeetitles")
 @IdClass(EmployeeTitlesId.class)
-public class EmployeeTitles implements Serializable {
+public class EmployeeTitles extends Auditable implements Serializable {
 
     @Id
     @ManyToOne
