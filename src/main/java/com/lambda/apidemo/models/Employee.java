@@ -27,7 +27,7 @@ public class Employee extends Auditable {
 //    @JsonIgnoreProperties(value = "employees")
 //    Set<JobTitle> jobtitles = new HashSet<>();
 
-    @OneToMany(mappedBy = "emp", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "emp", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties(value = "emp", allowSetters = true)
     private Set<EmployeeTitles> jobnames = new HashSet<>();
 
