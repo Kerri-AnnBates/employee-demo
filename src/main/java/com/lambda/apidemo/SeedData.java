@@ -1,39 +1,37 @@
 package com.lambda.apidemo;
 
 import com.github.javafaker.Faker;
-import com.lambda.apidemo.models.Email;
-import com.lambda.apidemo.models.Employee;
-import com.lambda.apidemo.models.EmployeeTitles;
-import com.lambda.apidemo.models.JobTitle;
+import com.lambda.apidemo.models.*;
 import com.lambda.apidemo.repositories.JobTitleRepository;
+import com.lambda.apidemo.repositories.RoleRepository;
+import com.lambda.apidemo.repositories.UserRepository;
 import com.lambda.apidemo.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Transactional
 @Component
-public class SeedData
-        implements CommandLineRunner
-{
+public class SeedData implements CommandLineRunner {
     @Autowired
     private EmployeeService employeeService;
 
     @Autowired
     private JobTitleRepository jobTitlerepos;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
     private Random random = new Random();
 
     @Override
-    public void run(String... args) throws
-            Exception
-    {
+    public void run(String... args) throws Exception {
         JobTitle jt1 = new JobTitle();
         jt1.setTitle("Big Boss");
         jobTitlerepos.save(jt1);
@@ -76,21 +74,18 @@ public class SeedData
 
         // this section gets a unique list of names
         Set<String> empNamesSet = new HashSet<>();
-        for (int i = 0; i < 3; i++)
-        {
+        for (int i = 0; i < 3; i++) {
             empNamesSet.add(nameFaker.name()
                     .fullName());
         }
 
-        for (String empName : empNamesSet)
-        {
+        for (String empName : empNamesSet) {
             Employee employee = new Employee(); // create a new employee object that will be removed at the end of the loop body
             employee.setName(empName); // set the name
             employee.setSalary(50000.00 + (100000.00 * random.nextDouble())); // randomly generate salary from 50000 to 150000
 
             int randomInt = random.nextInt(10); // random number of emails from 0 - 9
-            for (int j = 0; j < randomInt; j++)
-            {
+            for (int j = 0; j < randomInt; j++) {
                 employee.getEmails()
                         .add(new Email(nameFaker.internet()
                                 .emailAddress(),
@@ -100,5 +95,30 @@ public class SeedData
                     .add(new EmployeeTitles(employee, jt1, "Stumps")); // just assigning them to the first job title
             employeeService.save(employee);
         }
+
+        // Adding SeedData for users
+        Role r1 = new Role("ADMIN");
+        Role r2 = new Role("USER");
+        r1 = roleRepository.save(r1);
+        r2 = roleRepository.save(r2);
+
+        // admin
+        ArrayList<UserRoles> admins = new ArrayList<>();
+        admins.add(new UserRoles(new User(), r1));
+        User u1 = new User("barnbarn", "password", admins);
+        userRepository.save(u1);
+
+        // we need to start a new list of roles for the new admin user. For each user, a new list of roles needs to be created
+        // even the roles are the same between the users. The list of UserRoles though is never the same!
+        admins = new ArrayList<>();
+        admins.add(new UserRoles(new User(), r1));
+        User u2 = new User("admin", "password", admins);
+        userRepository.save(u2);
+
+        // users
+        ArrayList<UserRoles> users = new ArrayList<>();
+        users.add(new UserRoles(new User(), r2));
+        User u3 = new User("cinnamon", "ILuvM4th!", users);
+        userRepository.save(u3);
     }
 }
