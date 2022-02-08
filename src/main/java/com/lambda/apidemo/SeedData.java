@@ -9,9 +9,12 @@ import com.lambda.apidemo.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Random;
+import java.util.Set;
 
 @Transactional
 @Component
@@ -23,10 +26,10 @@ public class SeedData implements CommandLineRunner {
     private JobTitleRepository jobTitlerepos;
 
     @Autowired
-    private UserRepository userRepository;
+    private RoleRepository rolerepos;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private UserRepository userrepos;
 
     private Random random = new Random();
 
@@ -50,9 +53,13 @@ public class SeedData implements CommandLineRunner {
                 .add(new Email("bunny@hoppin.local",
                         emp1));
         emp1.getJobnames()
-                .add(new EmployeeTitles(emp1, jt1, "Stumps"));
+                .add(new EmployeeTitles(emp1,
+                        jt1,
+                        "Stumps"));
         emp1.getJobnames()
-                .add(new EmployeeTitles(emp1, jt2, "Stumps"));
+                .add(new EmployeeTitles(emp1,
+                        jt2,
+                        "Stumps"));
         employeeService.save(emp1);
 
         Employee emp2 = new Employee();
@@ -62,7 +69,9 @@ public class SeedData implements CommandLineRunner {
                 .add(new Email("barnbarn@local.com",
                         emp2));
         emp2.getJobnames()
-                .add(new EmployeeTitles(emp2, jt1, "Stumps"));
+                .add(new EmployeeTitles(emp2,
+                        jt1,
+                        "Stumps"));
         employeeService.save(emp2);
 
         Employee emp3 = new Employee();
@@ -92,33 +101,29 @@ public class SeedData implements CommandLineRunner {
                                 employee));
             }
             employee.getJobnames()
-                    .add(new EmployeeTitles(employee, jt1, "Stumps")); // just assigning them to the first job title
+                    .add(new EmployeeTitles(employee,
+                            jt1,
+                            "Stumps")); // just assigning them to the first job title
             employeeService.save(employee);
         }
 
         // Adding SeedData for users
         Role r1 = new Role("ADMIN");
         Role r2 = new Role("USER");
-        r1 = roleRepository.save(r1);
-        r2 = roleRepository.save(r2);
+        r1 = rolerepos.save(r1);
+        r2 = rolerepos.save(r2);
 
-        // admin
-        ArrayList<UserRoles> admins = new ArrayList<>();
-        admins.add(new UserRoles(new User(), r1));
-        User u1 = new User("barnbarn", "password", admins);
-        userRepository.save(u1);
+        User u1 = new User("barnbarn", "password");
+        u1.getRoles().add(new UserRoles(u1, r1));
+        userrepos.save(u1);
 
-        // we need to start a new list of roles for the new admin user. For each user, a new list of roles needs to be created
-        // even the roles are the same between the users. The list of UserRoles though is never the same!
-        admins = new ArrayList<>();
-        admins.add(new UserRoles(new User(), r1));
-        User u2 = new User("admin", "password", admins);
-        userRepository.save(u2);
+        User u2 = new User("admin", "password");
+        u2.getRoles().add(new UserRoles(u2, r1));
+        userrepos.save(u2);
 
         // users
-        ArrayList<UserRoles> users = new ArrayList<>();
-        users.add(new UserRoles(new User(), r2));
-        User u3 = new User("cinnamon", "ILuvM4th!", users);
-        userRepository.save(u3);
+        User u3 = new User("cinnamon", "ILuvM4th!");
+        u3.getRoles().add(new UserRoles(u3, r2));
+        userrepos.save(u3);
     }
 }
